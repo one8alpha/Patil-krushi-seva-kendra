@@ -1,6 +1,14 @@
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
+import cookieParser from "cookie-parser";
+import productRoutes from "./routes/product.routes";
+import categoryRoutes from "./routes/category.routes";
+import orderRoutes from "./routes/order.routes";
+import cartRoutes from "./routes/cart.routes";
+import wishlistRoutes from "./routes/wishlist.routes";
+import couponRoutes from "./routes/coupon.routes";
+import reviewRoutes from "./routes/review.routes";
 
 const app = express();
 
@@ -12,8 +20,21 @@ app.use(
     credentials: true,
   })
 );
-
+app.use(cookieParser());
 app.use(express.json());
+
+app.use("/api/products", productRoutes);
+app.use("/api/categories", categoryRoutes);
+app.use("/api/orders", orderRoutes);
+app.use("/api/cart", cartRoutes);
+
+app.use("/api/wishlist", wishlistRoutes);
+app.use("/api/coupons", couponRoutes);
+
+app.use("/api/reviews", reviewRoutes);
+
+
+
 
 app.get("/", (req, res) => {
   res.json({

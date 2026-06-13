@@ -33,19 +33,30 @@ enum CouponType {
 }
 
 model User {
-  id    String @id @default(cuid())
-  phone String @unique
-  role  Role   @default(CUSTOMER)
+  id String @id @default(cuid())
+
+  name          String?
+  email         String? @unique
+  emailVerified Boolean @default(false)
+  password      String?
+  image         String?
+
+  phone String? @unique
+  role  Role    @default(CUSTOMER)
+
+  sessions Session[]
+  accounts Account[]
 
   addresses Address[]
 
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  carts     Cart?
-  wishlist  Wishlist[]
-  orders    Order[]
+  carts    Cart?
+  wishlist Wishlist[]
+  orders   Order[]
 
   reviews Review[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Address {
@@ -255,4 +266,53 @@ model Coupon {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Account {
+  id         String @id
+  accountId  String
+  providerId String
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([identifier])
 }

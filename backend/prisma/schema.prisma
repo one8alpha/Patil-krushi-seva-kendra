@@ -99,7 +99,7 @@ model Category {
   updatedAt DateTime @updatedAt
 }
 
-model Product {
+model Productss {
   id String @id @default(cuid())
 
   name String
@@ -315,4 +315,39 @@ model Verification {
   updatedAt DateTime @updatedAt
 
   @@index([identifier])
+}
+
+
+
+
+
+
+
+
+
+
+model Product {
+  id            String   @id @default(cuid())
+  name          String
+  description   String
+
+  categoryId    String
+  brandId       String
+
+  packSize      String
+  price         Float
+
+  image         String?
+
+  usedForCrops  String[]
+
+  status        Boolean @default(true)
+
+  category      Category @relation(fields: [categoryId], references: [id])
+  brand         Brand @relation(fields: [brandId], references: [id])
+
+  variants      ProductVariant[]
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
